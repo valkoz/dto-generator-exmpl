@@ -7,6 +7,7 @@ openApiGenerate {
     generatorName = "kotlin"
     inputSpec = "$rootDir/app/swagger/petstore.yaml".toString()
     outputDir = "$buildDir/generated".toString()
+    templateDir = "$rootDir/templates".toString()
     apiPackage = "com.citymobil.feature.data"
     modelPackage = "com.citymobil.feature.dto"
     globalProperties = [
