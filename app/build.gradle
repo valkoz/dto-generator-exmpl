@@ -5,14 +5,14 @@ apply plugin: 'org.openapi.generator'
 
 openApiGenerate {
     generatorName = "kotlin"
-    inputSpec = "$rootDir/app/swagger/petstore.yaml".toString()
+    inputSpec = "$rootDir/app/swagger/petstore-expanded.yaml".toString()
     outputDir = "$buildDir/generated".toString()
     templateDir = "$rootDir/templates/kotlin-client".toString()
     apiPackage = "com.citymobil.feature.data"
     modelPackage = "com.citymobil.feature.dto"
     globalProperties = [
             modelDocs: "false",
-            models: "Pet,Error"
+            models: ""
     ]
     configOptions = [
             serializationLibrary: "gson"
