@@ -2,7 +2,7 @@ package com.valkoz.swaggergenerator
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.uber.feature.dto.ExpandedPet
+import com.citymobil.app.dto.ExpandedPetDto
 
 class MainActivity : AppCompatActivity() {
 
@@ -10,6 +10,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        ExpandedPet(name = "name", id = 0L)
+        ExpandedPetDto(name = "name", id = 0L)
     }
 }

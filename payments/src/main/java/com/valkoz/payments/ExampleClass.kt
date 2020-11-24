@@ -1,10 +1,10 @@
 package com.valkoz.payments
 
-import com.uber.payments.dto.PriceEstimate
+import com.citymobil.payments.dto.PriceEstimateDto
 
 class ExampleClass {
 
     fun doSmth() {
-        PriceEstimate()
+        PriceEstimateDto()
     }
 }

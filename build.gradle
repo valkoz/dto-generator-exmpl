@@ -33,12 +33,14 @@ subprojects {
             include "swagger/*.yaml"
         }.each { file ->
             def taskName = "openApiGenerate" + file.getName().capitalize().replace(".yaml", "")
+            def packageName = "com.citymobil." + projectDir.name.replace("-", ".") + ".dto"
             tasks.create( taskName, org.openapitools.generator.gradle.plugin.tasks.GenerateTask.class, {
                 generatorName = "kotlin"
                 inputSpec = "${file.getAbsolutePath()}"
-                outputDir = "$buildDir/generated/source/swagger".toString()
-                templateDir = "$rootDir/templates/kotlin-client".toString()
-                modelPackage = "com.citymobil.dto"
+                outputDir = "$buildDir/generated/source/swagger"
+                templateDir = "$rootDir/templates/kotlin-client"
+                modelPackage = packageName
+                modelNameSuffix = "Dto"
                 globalProperties = [
                         modelDocs: "false",
                         models: ""
