@@ -1,34 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'org.openapi.generator'
-
-import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
-
-task openApiGenerateAll() {
-    fileTree("$rootDir/app/swagger/").matching {
-        include "/*.yaml"
-    }.each { file ->
-        def taskName = "openApiGenerate" + file.getName().capitalize().replace(".yaml", "")
-        println("Creating gradle task: " + taskName + "...")
-        tasks.create( taskName, GenerateTask.class, {
-            generatorName = "kotlin"
-            inputSpec = "$rootDir/app/swagger/".toString() + "${file.getName()}"
-            outputDir = "$buildDir/generated/source/swagger".toString()
-            templateDir = "$rootDir/templates/kotlin-client".toString()
-            modelPackage = "com.uber.feature.dto"
-            globalProperties = [
-                    modelDocs: "false",
-                    models: ""
-            ]
-            configOptions = [
-                    serializationLibrary: "gson"
-            ]
-        })
-
-        openApiGenerateAll.dependsOn(taskName)
-    }
-}
 
 android {
     compileSdkVersion 28

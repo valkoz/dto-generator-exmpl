@@ -26,3 +26,29 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+subprojects {
+    task openApiGenerateAll() {
+        fileTree("$projectDir").matching {
+            include "swagger/*.yaml"
+        }.each { file ->
+            def taskName = "openApiGenerate" + file.getName().capitalize().replace(".yaml", "")
+            tasks.create( taskName, org.openapitools.generator.gradle.plugin.tasks.GenerateTask.class, {
+                generatorName = "kotlin"
+                inputSpec = "${file.getAbsolutePath()}"
+                outputDir = "$buildDir/generated/source/swagger".toString()
+                templateDir = "$rootDir/templates/kotlin-client".toString()
+                modelPackage = "com.citymobil.dto"
+                globalProperties = [
+                        modelDocs: "false",
+                        models: ""
+                ]
+                configOptions = [
+                        serializationLibrary: "gson"
+                ]
+            })
+
+            openApiGenerateAll.dependsOn(taskName)
+        }
+    }
+}

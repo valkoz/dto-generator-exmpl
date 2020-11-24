@@ -1,34 +1,6 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
-    id 'org.openapi.generator'
-}
-
-import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
-
-task openApiGenerateAll() {
-    fileTree("$rootDir/payments/swagger/").matching {
-        include "/*.yaml"
-    }.each { file ->
-        def taskName = "openApiGenerate" + file.getName().capitalize().replace(".yaml", "")
-        println("Creating gradle task: " + taskName + "...")
-        tasks.create( taskName, GenerateTask.class, {
-            generatorName = "kotlin"
-            inputSpec = "$rootDir/payments/swagger/".toString() + "${file.getName()}"
-            outputDir = "$buildDir/generated/source/swagger".toString()
-            templateDir = "$rootDir/templates/kotlin-client".toString()
-            modelPackage = "com.uber.payments.dto"
-            globalProperties = [
-                    modelDocs: "false",
-                    models: ""
-            ]
-            configOptions = [
-                    serializationLibrary: "gson"
-            ]
-        })
-
-        openApiGenerateAll.dependsOn(taskName)
-    }
 }
 
 android {
