@@ -14,7 +14,7 @@ task openApiGenerateAll() {
         tasks.create( taskName, GenerateTask.class, {
             generatorName = "kotlin"
             inputSpec = "$rootDir/app/swagger/".toString() + "${file.getName()}"
-            outputDir = "$buildDir/generated".toString()
+            outputDir = "$buildDir/generated/source/swagger".toString()
             templateDir = "$rootDir/templates/kotlin-client".toString()
             modelPackage = "com.uber.feature.dto"
             globalProperties = [
@@ -40,6 +40,11 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    sourceSets {
+        main.java.srcDirs += "$buildDir/generated/source/swagger/src/main/kotlin"
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -50,6 +55,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':payments')
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'

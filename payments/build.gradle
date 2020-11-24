@@ -15,7 +15,7 @@ task openApiGenerateAll() {
         tasks.create( taskName, GenerateTask.class, {
             generatorName = "kotlin"
             inputSpec = "$rootDir/payments/swagger/".toString() + "${file.getName()}"
-            outputDir = "$buildDir/generated".toString()
+            outputDir = "$buildDir/generated/source/swagger".toString()
             templateDir = "$rootDir/templates/kotlin-client".toString()
             modelPackage = "com.uber.payments.dto"
             globalProperties = [
@@ -42,6 +42,10 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+    }
+
+    sourceSets {
+        main.java.srcDirs += "$buildDir/generated/source/swagger/src/main/kotlin"
     }
 
     buildTypes {
