@@ -3,20 +3,31 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.openapi.generator'
 
-openApiGenerate {
-    generatorName = "kotlin"
-    inputSpec = "$rootDir/app/swagger/petstore-expanded.yaml".toString()
-    outputDir = "$buildDir/generated".toString()
-    templateDir = "$rootDir/templates/kotlin-client".toString()
-    apiPackage = "com.citymobil.feature.data"
-    modelPackage = "com.citymobil.feature.dto"
-    globalProperties = [
-            modelDocs: "false",
-            models: ""
-    ]
-    configOptions = [
-            serializationLibrary: "gson"
-    ]
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
+task openApiGenerateAll() {
+    fileTree("$rootDir/app/swagger/").matching {
+        include "/*.yaml"
+    }.each { file ->
+        def taskName = "openApiGenerate" + file.getName().capitalize().replace(".yaml", "")
+        println("Creating gradle task: " + taskName + "...")
+        tasks.create( taskName, GenerateTask.class, {
+            generatorName = "kotlin"
+            inputSpec = "$rootDir/app/swagger/".toString() + "${file.getName()}"
+            outputDir = "$buildDir/generated".toString()
+            templateDir = "$rootDir/templates/kotlin-client".toString()
+            modelPackage = "com.citymobil.feature.dto"
+            globalProperties = [
+                    modelDocs: "false",
+                    models: ""
+            ]
+            configOptions = [
+                    serializationLibrary: "gson"
+            ]
+        })
+
+        openApiGenerateAll.dependsOn(taskName)
+    }
 }
 
 android {
