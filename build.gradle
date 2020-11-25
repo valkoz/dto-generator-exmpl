@@ -27,8 +27,8 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-gradle.projectsEvaluated {
-    subprojects {
+subprojects {
+    afterEvaluate {
         task openApiGenerateAll() {
             fileTree("$projectDir").matching {
                 include "swagger/*.yaml"
@@ -55,7 +55,7 @@ gradle.projectsEvaluated {
                 preBuild.dependsOn openApiGenerateAll
             }
         }
-        // TODO: add custom annotation for backend errors tracking
-        // TODO: add json parsing
     }
+    // TODO: add custom annotation for backend errors tracking
+    // TODO: add json parsing
 }
