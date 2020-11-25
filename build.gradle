@@ -27,30 +27,35 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-subprojects {
-    task openApiGenerateAll() {
-        fileTree("$projectDir").matching {
-            include "swagger/*.yaml"
-        }.each { file ->
-            def taskName = "openApiGenerate" + file.getName().capitalize().replace(".yaml", "")
-            def packageName = "com.citymobil." + projectDir.name.replace("-", ".") + ".dto"
-            tasks.create( taskName, org.openapitools.generator.gradle.plugin.tasks.GenerateTask.class, {
-                generatorName = "kotlin"
-                inputSpec = "${file.getAbsolutePath()}"
-                outputDir = "$buildDir/generated/source/swagger"
-                templateDir = "$rootDir/templates/kotlin-client"
-                modelPackage = packageName
-                modelNameSuffix = "Dto"
-                globalProperties = [
-                        modelDocs: "false",
-                        models: ""
-                ]
-                configOptions = [
-                        serializationLibrary: "gson"
-                ]
-            })
+gradle.projectsEvaluated {
+    subprojects {
+        task openApiGenerateAll() {
+            fileTree("$projectDir").matching {
+                include "swagger/*.yaml"
+            }.each { file ->
+                def taskName = "openApiGenerate" + file.getName().capitalize().replace(".yaml", "")
+                def packageName = "com.citymobil." + projectDir.name.replace("-", ".") + ".dto"
+                tasks.create(taskName, org.openapitools.generator.gradle.plugin.tasks.GenerateTask.class, {
+                    generatorName = "kotlin"
+                    inputSpec = "${file.getAbsolutePath()}"
+                    outputDir = "$buildDir/generated/source/swagger"
+                    templateDir = "$rootDir/templates/kotlin-client"
+                    modelPackage = packageName
+                    modelNameSuffix = "Dto"
+                    globalProperties = [
+                            modelDocs: "false",
+                            models   : ""
+                    ]
+                    configOptions = [
+                            serializationLibrary: "gson"
+                    ]
+                })
 
-            openApiGenerateAll.dependsOn(taskName)
+                openApiGenerateAll.dependsOn(taskName)
+                preBuild.dependsOn openApiGenerateAll
+            }
         }
+        // TODO: add custom annotation for backend errors tracking
+        // TODO: add json parsing
     }
 }
